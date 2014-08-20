@@ -9,12 +9,11 @@
 #include <string.h>
 
 //Player1
-int16_t player1X = LCD_PIXEL_WIDTH-20;
-int16_t player1Y = LCD_PIXEL_HEIGHT-20;
+int16_t player1X = 10;
+int16_t player1Y = 10;
 uint16_t player1W = 60;
 uint16_t player1H = 10;
 uint8_t player1IsReversed = 1;
-uint8_t lock = 1;
 
 //Player2
 int16_t player2X = LCD_PIXEL_WIDTH - 20;
@@ -24,17 +23,17 @@ uint16_t player2H = 10;
 uint8_t player2IsReversed = 0;
 
 //Ball
-/*uint16_t ballSize = 10;
+uint16_t ballSize = 5;
 int16_t ballX = ( LCD_PIXEL_WIDTH - 5 ) / 2;
 int16_t ballY = ( LCD_PIXEL_HEIGHT - 5 ) / 2;
 int16_t ballVX = 5;
 int16_t ballVY = 5;
 uint8_t ballIsRun = 0;
-*/
+
 //Mode
 uint8_t demoMode = 0;
 
-/*void
+void
 BallReset()
 {
 	ballX = ( LCD_PIXEL_WIDTH - 5 ) / 2;
@@ -45,16 +44,18 @@ BallReset()
 
 	ballIsRun = 1;
 }
-*/
+
 void
 GAME_EventHandler1()
 {
-	while( STM_EVAL_PBGetState( BUTTON_USER ) ){
+	if( STM_EVAL_PBGetState( BUTTON_USER ) ){
+
+		player1IsReversed = 0;
+
+		while( STM_EVAL_PBGetState( BUTTON_USER ) );
 
 		player1IsReversed = 1;
-
 	}
-		player1IsReversed = 0;
 }
 
 void
@@ -73,9 +74,9 @@ GAME_EventHandler2()
 void
 GAME_EventHandler3()
 {
-/*	if( ballIsRun == 0 ){
+	if( ballIsRun == 0 ){
 		BallReset();
-	}*/
+	}
 }
 
 void
@@ -89,32 +90,15 @@ GAME_Update()
 	if( demoMode == 0 ){
 
 		if( player1IsReversed )
-		{
-			player1W = 10;
-			player1H = 60;
-			player1Y -= 5;
-			if(lock)
-			player1X += 2;
-			if( player1Y <= 0 )
-                        	player1Y = 0;
-                 if( player1X <= 0 ){
-			lock=0;
-                        player1X = 0;
-		}
-                 else if( player1X + player1W >= LCD_PIXEL_WIDTH )
-                        player1X = LCD_PIXEL_WIDTH - player1W;
-
-		}
+			player1X -= 5;
 		else
-		{
-			player1W = 60;
-			player1H = 10;
-			player1X -= 2;
+			player1X += 5;
+
 		if( player1X <= 0 )
 			player1X = 0;
 		else if( player1X + player1W >= LCD_PIXEL_WIDTH )
 			player1X = LCD_PIXEL_WIDTH - player1W;
-		}
+
 		//Player2
 		if( player2IsReversed )
 			player2X -= 5;
@@ -127,7 +111,7 @@ GAME_Update()
 			player2X = LCD_PIXEL_WIDTH - player2W;
 
 		//Ball
-	/*	if( ballIsRun == 1 ){
+		if( ballIsRun == 1 ){
 
 			LCD_SetTextColor( LCD_COLOR_BLACK );
 			LCD_DrawFullRect( ballX, ballY, ballSize, ballSize );
@@ -237,9 +221,9 @@ GAME_Update()
 			else if( player2X + player2W >= LCD_PIXEL_WIDTH )
 				player2X = LCD_PIXEL_WIDTH - player2W;
 
-*/
+
 			//Ball
-/*			if( ballIsRun == 1 ){
+			if( ballIsRun == 1 ){
 
 				LCD_SetTextColor( LCD_COLOR_BLACK );
 				LCD_DrawFullRect( ballX, ballY, ballSize, ballSize );
@@ -310,16 +294,16 @@ GAME_Update()
 				else
 					BallReset();
 			}
-		}*/
+		}
 	}
 }
 
-void
+	void
 GAME_Render()
 {
-	LCD_SetTextColor( LCD_COLOR_RED );
+	LCD_SetTextColor( LCD_COLOR_WHITE );
 	LCD_DrawFullRect( player1X, player1Y, player1W, player1H );
 	LCD_DrawFullRect( player2X, player2Y, player2W, player2H );
-//	LCD_DrawFullRect( ballX, ballY, ballSize, ballSize );
-//	LCD_DrawLine( 10, LCD_PIXEL_HEIGHT / 2, LCD_PIXEL_WIDTH - 20, LCD_DIR_HORIZONTAL );
+	LCD_DrawFullRect( ballX, ballY, ballSize, ballSize );
+	LCD_DrawLine( 10, LCD_PIXEL_HEIGHT / 2, LCD_PIXEL_WIDTH - 20, LCD_DIR_HORIZONTAL );
 }
